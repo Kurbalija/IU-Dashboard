@@ -1,58 +1,32 @@
-class View:
-    @staticmethod
-    def zeige_statistik(student, ects, durchschnitt):
-        breite = 80
-        print("\n" + "=" * breite)
-        print(f"{'STUDENTEN-ÜBERSICHT'.center(breite)}")
-        print("=" * breite)
-        print(f"{'Name:':<20}{student.name}")
-        print(f"{'Studiengang:':<20}{student.studiengang}")
-        print(f"{'Ziel-ECTS:':<20}{student.ziel_ects}")
-        print(f"{'Erreichte ECTS:':<20}{ects}")
-        print(f"{'Notendurchschnitt:':<20}{durchschnitt:.2f}" if durchschnitt is not None else f"{'Notendurchschnitt:':<20}-")
+import tkinter as tk
+from tkinter import ttk
 
-        # Fortschritt direkt anzeigen
-        View.zeige_fortschritt(ects, student.ziel_ects)
+class View(tk.Tk):
+    def __init__(self, student, kurse, ects, durchschnitt):
+        super().__init__()
+        self.title("Dashboard")
+        self.geometry("600x400")
+        self.config(bg="white")
 
-        print("=" * breite + "\n")
+        # Statistik
+        label = tk.Label(self, text="STUDENTEN-ÜBERSICHT", font=("Arial", 16), bg="white")
+        label.pack(pady=5)
 
-    @staticmethod
-    def zeige_kurse(kurse):
-        breite = 80
-        print("\n" + "=" * breite)
-        print(f"{'KURSE'.center(breite)}")
-        print("=" * breite)
-        print(f"{'Kurscode':<15} {'Kursname':<50} {'ECTS':<5} {'Note'}")
-        print("-" * breite)
+        tk.Label(self, text=f"Name: {student.name}", bg="white").pack()
+        tk.Label(self, text=f"Studiengang: {student.studiengang}", bg="white").pack()
+        tk.Label(self, text=f"Ziel-ECTS: {student.ziel_ects}", bg="white").pack()
+        tk.Label(self, text=f"Erreichte ECTS: {ects}", bg="white").pack()
+        tk.Label(self, text=f"Notendurchschnitt: {durchschnitt if durchschnitt else '-'}", bg="white").pack()
+
+        # Fortschrittsbalken
+        self.progress = ttk.Progressbar(self, length=400, mode="determinate")
+        self.progress.pack(pady=5)
+        fortschritt = (ects / student.ziel_ects) * 100 if student.ziel_ects > 0 else 0
+        self.progress["value"] = fortschritt
+
+        # Kurse
         for kurs in kurse:
-            if kurs.note == 0:
-                note = "A"
-            elif kurs.note is not None:
-                note = f"{kurs.note:.2f}"
-            else:
-                note = "-"
+            note = "A" if kurs.note == 0 else (f"{kurs.note:.2f}" if kurs.note is not None else "-")
+            tk.Label(self, text=f"{kurs.kurscode} - {kurs.name} - {kurs.ects} ECTS - Note: {note}", bg="white").pack()
 
-            print(f"{kurs.kurscode:<15} {kurs.name[:50]:<50} {kurs.ects:<5} {note}")
-        print("=" * breite + "\n")
-
-    @staticmethod
-    def zeige_fortschritt(erreichte_ects, ziel_ects):
-        if ziel_ects == 0:
-            print("Fortschritt: Keine Ziel-ECTS definiert.")
-            return
-
-        prozent = (erreichte_ects / ziel_ects) * 100
-        balkenbreite = 60
-        gefuellt = int(balkenbreite * (prozent / 100))
-        leer = balkenbreite - gefuellt
-
-        balken = f"[{'█' * gefuellt}{'-' * leer}]"
-        print(f"\nFortschritt: {balken} {prozent:.2f}%\n")
-
-    @staticmethod
-    def zeige_nachricht(nachricht):
-        print(f"\n[✔️] {nachricht}\n")
-
-    @staticmethod
-    def zeige_fehler(fehlermeldung):
-        print(f"\n[❌] {fehlermeldung}\n")
+        tk.Button(self, text="Schließen", command=self.destroy).pack(pady=5)

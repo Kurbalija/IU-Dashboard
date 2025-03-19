@@ -13,7 +13,7 @@ class Kurs:
         self.ects = int(ects)
         
         if note == 'A':
-            self.note = 'A'  # Als String speichern
+            self.note = 0  # "A" wird intern als 0 gespeichert
         elif note:
             try:
                 self.note = float(note)
@@ -50,7 +50,7 @@ class KursRepository:
                     'Kurscode': kurs.kurscode,
                     'Kursname': kurs.name,
                     'ECTS': kurs.ects,
-                    'Note': kurs.note if kurs.note is not None else ''
+                    'Note': 'A' if kurs.note == 0 else (kurs.note if kurs.note is not None else '')
                 })
 
 class StudentRepository:
