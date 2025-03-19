@@ -5,8 +5,8 @@ from view import View
 class Controller:
     @staticmethod
     def start():
-        student = StudentRepository.lade_student('student.csv')
-        kurse = KursRepository.lade_kurse('kurse.csv')
+        student = StudentRepository.lade_student('CSV\student.csv')
+        kurse = KursRepository.lade_kurse('CSV\kurse.csv')
 
         ects = Service.berechne_ects(kurse)
         durchschnitt = Service.berechne_durchschnitt(kurse)
