@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, Canvas
+import platform
+
 from model import KursRepository
 from service import Service
 
@@ -31,16 +33,29 @@ class View(tk.Tk):
         style.theme_use("clam")
         style.layout("Borderless.Treeview", [("Borderless.Treeview.treearea", {"sticky": "nswe"})])
         style.element_create("Borderless.Treeview.treearea", "from", "clam")
-        style.configure("Borderless.Treeview",
-                        background=self.border_color, foreground=self.foreground_color,
-                        rowheight=30, fieldbackground=self.border_color,
-                        font=("Consolas", 12), borderwidth=0, relief="flat")
-        style.map("Borderless.Treeview",
-                  background=[("selected", self.accent_color)],
-                  foreground=[("selected", "#FFFFFF")])
-        style.configure("Borderless.Treeview.Heading",
-                        background=self.border_color, foreground=self.foreground_color,
-                        font=("Consolas", 12, "bold"), borderwidth=0, relief="flat")
+        style.configure(
+            "Borderless.Treeview",
+            background=self.border_color,
+            foreground=self.foreground_color,
+            rowheight=30,
+            fieldbackground=self.border_color,
+            font=("Consolas", 12),
+            borderwidth=0,
+            relief="flat"
+        )
+        style.map(
+            "Borderless.Treeview",
+            background=[("selected", self.accent_color)],
+            foreground=[("selected", "#FFFFFF")]
+        )
+        style.configure(
+            "Borderless.Treeview.Heading",
+            background=self.border_color,
+            foreground=self.foreground_color,
+            font=("Consolas", 12, "bold"),
+            borderwidth=0,
+            relief="flat"
+        )
         style.map("Borderless.Treeview.Heading", background=[])
 
         # Titelzeile
@@ -50,24 +65,49 @@ class View(tk.Tk):
         title_bar.bind("<ButtonRelease-1>", self.stop_move)
         title_bar.bind("<B1-Motion>", self.on_move)
 
-        tk.Label(title_bar, text="🎓 IU Progress Tracker", font=("Consolas", 16, "bold"),
-                 fg=self.accent_color, bg=self.border_color).pack(side="left", padx=10)
+        tk.Label(
+            title_bar,
+            text="🎓 IU Progress Tracker",
+            font=("Consolas", 16, "bold"),
+            fg=self.accent_color,
+            bg=self.border_color
+        ).pack(side="left", padx=10)
 
-        btn_close = tk.Button(title_bar, text="X", font=("Consolas", 12),
-                              bg=self.border_color, fg=self.foreground_color,
-                              width=3, height=1, borderwidth=0, command=self.destroy,
-                              highlightthickness=0, activebackground=self.border_color)
-        btn_close.pack(side="right", padx=(0, 10))
-        btn_close.bind("<Enter>", lambda e: btn_close.config(bg=self.hover_close_color))
-        btn_close.bind("<Leave>", lambda e: btn_close.config(bg=self.border_color))
+        # Buttons nur anzeigen, wenn nicht macOS
+        if platform.system() != "Darwin":
+            btn_close = tk.Button(
+                title_bar,
+                text="X",
+                font=("Consolas", 12),
+                bg=self.border_color,
+                fg=self.foreground_color,
+                width=3,
+                height=1,
+                borderwidth=0,
+                command=self.destroy,
+                highlightthickness=0,
+                activebackground=self.border_color
+            )
+            btn_close.pack(side="right", padx=(0, 10))
+            btn_close.bind("<Enter>", lambda e: btn_close.config(bg=self.hover_close_color))
+            btn_close.bind("<Leave>", lambda e: btn_close.config(bg=self.border_color))
 
-        btn_min = tk.Button(title_bar, text="–", font=("Consolas", 12),
-                            bg=self.border_color, fg=self.foreground_color,
-                            width=3, height=1, borderwidth=0, command=self.iconify,
-                            highlightthickness=0, activebackground=self.border_color)
-        btn_min.pack(side="right", padx=5)
-        btn_min.bind("<Enter>", lambda e: btn_min.config(bg=self.hover_minimize_color))
-        btn_min.bind("<Leave>", lambda e: btn_min.config(bg=self.border_color))
+            btn_min = tk.Button(
+                title_bar,
+                text="–",
+                font=("Consolas", 12),
+                bg=self.border_color,
+                fg=self.foreground_color,
+                width=3,
+                height=1,
+                borderwidth=0,
+                command=self.iconify,
+                highlightthickness=0,
+                activebackground=self.border_color
+            )
+            btn_min.pack(side="right", padx=5)
+            btn_min.bind("<Enter>", lambda e: btn_min.config(bg=self.hover_minimize_color))
+            btn_min.bind("<Leave>", lambda e: btn_min.config(bg=self.border_color))
 
         # Hauptbereich (Grid)
         main_frame = tk.Frame(self, bg=self.background_color)
@@ -99,19 +139,30 @@ class View(tk.Tk):
         prog_card = tk.Frame(prog_frame, bg=self.border_color)
         prog_card.pack(expand=True)
 
-        tk.Label(prog_card, text="Fortschritt", font=("Consolas", 12, "bold"),
-                 bg=self.border_color, fg=self.foreground_color).pack(pady=(0, 5))
+        tk.Label(
+            prog_card,
+            text="Fortschritt",
+            font=("Consolas", 12, "bold"),
+            bg=self.border_color,
+            fg=self.foreground_color
+        ).pack(pady=(0, 5))
 
         self.circle_frame = tk.Frame(prog_card, bg=self.border_color)
         self.circle_frame.pack()
+
         self.draw_circle(self.circle_frame, self.ects, student.ziel_ects, size=130, bottom_pad=20)
 
         # Tabelle (unten)
         tbl_frame = tk.Frame(main_frame, bg=self.background_color)
         tbl_frame.grid(row=1, column=0, columnspan=2, sticky="nsew", padx=10, pady=(0, 10))
-        self.tree = ttk.Treeview(tbl_frame, style="Borderless.Treeview",
-                                 columns=("Kurscode", "Kursname", "ECTS", "Note"),
-                                 show="headings", height=12)
+
+        self.tree = ttk.Treeview(
+            tbl_frame,
+            style="Borderless.Treeview",
+            columns=("Kurscode", "Kursname", "ECTS", "Note"),
+            show="headings",
+            height=12
+        )
         self.tree.pack(fill="both", expand=True)
         self.tree.heading("Kurscode", text="Kurscode")
         self.tree.heading("Kursname", text="Kursname")
@@ -167,9 +218,13 @@ class View(tk.Tk):
         card = tk.Frame(outer, bg=self.border_color)
         card.pack(padx=10, pady=10, fill="both", expand=True)
 
-        tk.Label(card, text="Note (1-5), 'A' oder '-'",
-                 font=("Consolas",12), bg=self.border_color,
-                 fg=self.foreground_color).pack(pady=(5,3))
+        tk.Label(
+            card,
+            text="Note (1-5), 'A' oder '-'",
+            font=("Consolas", 12),
+            bg=self.border_color,
+            fg=self.foreground_color
+        ).pack(pady=(5, 3))
 
         note_var = tk.StringVar()
         if kurs.note == 0:
@@ -179,26 +234,44 @@ class View(tk.Tk):
         else:
             note_var.set(f"{kurs.note:.2f}")
 
-        self.entry_field = tk.Entry(card, textvariable=note_var,
-                                    font=("Consolas",12),
-                                    bg="#2C2F33", fg="#FFFFFF",
-                                    insertbackground="#FFFFFF",
-                                    bd=0, highlightthickness=0, relief="flat")
-        self.entry_field.pack(pady=(0,5))
+        self.entry_field = tk.Entry(
+            card,
+            textvariable=note_var,
+            font=("Consolas", 12),
+            bg="#2C2F33",
+            fg="#FFFFFF",
+            insertbackground="#FFFFFF",
+            bd=0,
+            highlightthickness=0,
+            relief="flat"
+        )
+        self.entry_field.pack(pady=(0, 5))
 
         btn_row = tk.Frame(card, bg=self.border_color)
         btn_row.pack()
 
-        save_btn = tk.Label(btn_row, text="Speichern", width=10,
-                            bg=self.accent_color, fg="#FFFFFF",
-                            font=("Consolas",12,"bold"), cursor="hand2")
+        save_btn = tk.Label(
+            btn_row,
+            text="Speichern",
+            width=10,
+            bg=self.accent_color,
+            fg="#FFFFFF",
+            font=("Consolas", 12, "bold"),
+            cursor="hand2"
+        )
         save_btn.pack(side="left", padx=5)
         self.add_hover(save_btn, self.accent_color)
         save_btn.bind("<Button-1>", lambda _: self.save_note(kurs, note_var.get(), top))
 
-        cancel_btn = tk.Label(btn_row, text="Abbrechen", width=10,
-                              bg=self.border_color, fg=self.foreground_color,
-                              font=("Consolas",12), cursor="hand2")
+        cancel_btn = tk.Label(
+            btn_row,
+            text="Abbrechen",
+            width=10,
+            bg=self.border_color,
+            fg=self.foreground_color,
+            font=("Consolas", 12),
+            cursor="hand2"
+        )
         cancel_btn.pack(side="left", padx=5)
         self.add_hover(cancel_btn, self.border_color)
         cancel_btn.bind("<Button-1>", lambda _: top.destroy())
@@ -213,7 +286,7 @@ class View(tk.Tk):
             try:
                 val = float(txt)
                 if 1 <= val <= 5:
-                    kurs.note = round(val,2)
+                    kurs.note = round(val, 2)
                 else:
                     self.highlight_invalid(self.entry_field)
                     return
@@ -221,7 +294,8 @@ class View(tk.Tk):
                 self.highlight_invalid(self.entry_field)
                 return
         self.highlight_valid(self.entry_field)
-        KursRepository.speichere_kurse("CSV\kurse.csv", self.kurse)
+        KursRepository.speichere_kurse("CSV/kurse.csv", self.kurse)
+
         # UI-Refresh
         row_id = None
         for iid, obj in self.item_kurs_map.items():
@@ -229,8 +303,9 @@ class View(tk.Tk):
                 row_id = iid
                 break
         if row_id:
-            disp = "-" if kurs.note is None else ("A" if kurs.note==0 else f"{kurs.note:.2f}")
+            disp = "-" if kurs.note is None else ("A" if kurs.note == 0 else f"{kurs.note:.2f}")
             self.tree.set(row_id, "Note", disp)
+
         self.refresh_stats()
         dialog.destroy()
 
@@ -247,40 +322,79 @@ class View(tk.Tk):
     # Hilfsfunktionen
     def highlight_invalid(self, entry):
         entry.config(highlightthickness=2, highlightcolor="#FF0000")
+
     def highlight_valid(self, entry):
         entry.config(highlightthickness=0)
+
     def add_stat_label(self, parent, title, val, row):
-        tk.Label(parent, text=title, font=("Consolas",12,"bold"),
-                 bg="#36393F", fg="#DCDDDE").grid(row=row, column=0, sticky="w", padx=(5,25), pady=3)
+        tk.Label(
+            parent,
+            text=title,
+            font=("Consolas", 12, "bold"),
+            bg="#36393F",
+            fg="#DCDDDE"
+        ).grid(row=row, column=0, sticky="w", padx=(5, 25), pady=3)
+
         if isinstance(val, tk.StringVar):
-            tk.Label(parent, textvariable=val, font=("Consolas",12),
-                     bg="#36393F", fg="#7289DA").grid(row=row, column=1, sticky="w", padx=(0,10), pady=3)
+            tk.Label(
+                parent,
+                textvariable=val,
+                font=("Consolas", 12),
+                bg="#36393F",
+                fg="#7289DA"
+            ).grid(row=row, column=1, sticky="w", padx=(0, 10), pady=3)
         else:
-            tk.Label(parent, text=str(val), font=("Consolas",12),
-                     bg="#36393F", fg="#7289DA").grid(row=row, column=1, sticky="w", padx=(0,10), pady=3)
+            tk.Label(
+                parent,
+                text=str(val),
+                font=("Consolas", 12),
+                bg="#36393F",
+                fg="#7289DA"
+            ).grid(row=row, column=1, sticky="w", padx=(0, 10), pady=3)
+
     def draw_circle(self, parent, reached, goal, size=130, bottom_pad=0):
         c = Canvas(parent, width=size, height=size, bg="#36393F", highlightthickness=0)
-        c.pack(pady=(0,bottom_pad))
-        pct = (reached/goal*100) if goal>0 else 0
-        angle = (pct/100)*360
-        pad=10
-        c.create_oval(pad,pad,size-pad,size-pad, outline=self.background_color, width=8)
-        c.create_arc(pad,pad,size-pad,size-pad, start=-90, extent=-angle,
-                     outline=self.accent_color, width=8, style="arc")
-        c.create_text(size/2, size/2, text=f"{pct:.0f}%", fill=self.foreground_color,
-                      font=("Consolas",14,"bold"))
+        c.pack(pady=(0, bottom_pad))
+        pct = (reached / goal * 100) if goal > 0 else 0
+        angle = (pct / 100) * 360
+        pad = 10
+        c.create_oval(pad, pad, size - pad, size - pad, outline=self.background_color, width=8)
+        c.create_arc(
+            pad,
+            pad,
+            size - pad,
+            size - pad,
+            start=-90,
+            extent=-angle,
+            outline=self.accent_color,
+            width=8,
+            style="arc"
+        )
+        c.create_text(
+            size / 2,
+            size / 2,
+            text=f"{pct:.0f}%",
+            fill=self.foreground_color,
+            font=("Consolas", 14, "bold")
+        )
+
     def add_hover(self, lbl, normal_bg):
-        def on_enter(_): lbl.config(bg=self.hover_minimize_color)
-        def on_leave(_): lbl.config(bg=normal_bg)
+        def on_enter(_):
+            lbl.config(bg=self.hover_minimize_color)
+        def on_leave(_):
+            lbl.config(bg=normal_bg)
         lbl.bind("<Enter>", on_enter)
         lbl.bind("<Leave>", on_leave)
+
     # Fenster bewegen
     def start_move(self, e):
         self._x = e.x
         self._y = e.y
+
     def stop_move(self, e):
         self._x = None
         self._y = None
+
     def on_move(self, e):
         x = self.winfo_x() + (e.x - (self._x or 0))
         y = self.winfo_y() + (e.y - (self._y or 0))
