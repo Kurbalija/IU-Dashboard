@@ -157,6 +157,13 @@ class View(tk.Tk):
             bg=self.border_color,
             fg=self.foreground_color
         ).pack(pady=(0, 5))
+        tk.Label(
+            prog_card,
+            text="Fortschritt",
+            font=("Consolas", 12, "bold"),
+            bg=self.border_color,
+            fg=self.foreground_color
+        ).pack(pady=(0, 5))
 
         self.circle_frame = tk.Frame(prog_card, bg=self.border_color)
         self.circle_frame.pack()
@@ -164,6 +171,14 @@ class View(tk.Tk):
 
         tbl_frame = tk.Frame(main_frame, bg=self.background_color)
         tbl_frame.grid(row=1, column=0, columnspan=2, sticky="nsew", padx=10, pady=(0, 10))
+
+        self.tree = ttk.Treeview(
+            tbl_frame,
+            style="Borderless.Treeview",
+            columns=("Kurscode", "Kursname", "ECTS", "Note"),
+            show="headings",
+            height=12
+        )
 
         self.tree = ttk.Treeview(
             tbl_frame,
@@ -227,6 +242,13 @@ class View(tk.Tk):
         card = tk.Frame(outer, bg=self.border_color)
         card.pack(padx=10, pady=10, fill="both", expand=True)
 
+        tk.Label(
+            card,
+            text="Note (1-5), 'A' oder '-'",
+            font=("Consolas", 12),
+            bg=self.border_color,
+            fg=self.foreground_color
+        ).pack(pady=(5, 3))
         tk.Label(
             card,
             text="Note (1-5), 'A' oder '-'",

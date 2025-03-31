@@ -1,32 +1,32 @@
 Kurscode,Kursname,ECTS,Note
 IGIS01,Grundlagen der industriellen Softwaretechnik,5,2.0
 DLBWIRITT01,Einführung in das wissenschaftliche Arbeiten für IT und Technik,5,
-IREN01,Requirements Engineering,5,
+IREN01,Requirements Engineering,5,3.1
 ISPE01,Spezifikation,5,
 IOBP01,Grundlagen der objektorientierten Programmierung mit Java,5,A
 IDBS01,Datenmodellierung und Datenbanksysteme,5,A
 DLBCSDSJCL02_D,Datenstruktur und Java-Klassenbibliothek,5,A
 DLBKA01,Kollaboratives Arbeiten,5,A
 IPWA01-01,Programmierung von Web-Anwendungsoberflächen,5,A
-DLBIADPS01,"Algorithmen, Datenstrukturen und Programmiersprachen",5,
+DLBIADPS01,"Algorithmen, Datenstrukturen und Programmiersprachen",5,2.2
 IQSS01,Qualitätssicherung im Softwareprozess,5,
-IAMG01,IT-Architekturmanagement,5,
+IAMG01,IT-Architekturmanagement,5,4.0
 IPWA02-01,Programmierung von industriellen Informationssystemen mit Java EE,5,
 DLBSEPENIT01_D,Ethik und Nachhaltigkeit in der IT,5,
 IPMG01-01,IT-Projektmanagement,5,
 DLBWIWTMAS01,Techniken und Methoden der agilen Softwareentwicklung,5,
-DLBCSEMSE01_D,Mobile Software Engineering I,5,
+DLBCSEMSE01_D,Mobile Software Engineering I,5,3.3
 ISSE01,Seminar 'Software Engineering',5,
-IWNF02,Projekt Agiles Software Engineering,5,
-DLBSEPITI01_D,IT-Infrastruktur,5,
+IWNF02,Projekt Agiles Software Engineering,5,2.1
+DLBSEPITI01_D,IT-Infrastruktur,5,4.5
 IWSM01,IT-Service Management,5,
 DLBCSEMSE02_D,Projekt: Mobile Software Engineering II,5,
-DLBSEPCP01_D,Cloud Programming,5,
+DLBSEPCP01_D,Cloud Programming,5,1.1
 DLBISIC01,Einführung in Datenschutz und IT-Sicherheit,5,
-DLBSEPDOCD01_D,DevOps und Continuous Delivery,5,
+DLBSEPDOCD01_D,DevOps und Continuous Delivery,5,3.4
 DLBMIUID01,Gestaltung und Ergonomie von User Interfaces,5,
 DLBDSIPWP01_D,Einführung in die Programmierung mit Python,5,2.3
-DLBSEPPSD01_D,Projekt: Software Development,5,
+DLBSEPPSD01_D,Projekt: Software Development,5,2.0
 IMT101,Mathematik Grundlagen I,5,A
 IMT102-01,Mathematik Grundlagen II,5,A
 DLBDSIDS01_D,Einführung in Data Science,5,
