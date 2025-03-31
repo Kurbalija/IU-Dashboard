@@ -1,34 +1,34 @@
 class Service:
     @staticmethod
     def berechne_ects(kurse):
-        # 0 wird berücksichtigt, da angerechnete Fächer gezählt werden
-        return sum(kurs.ects for kurs in kurse if kurs.note is not None)
+        return sum(k.ects for k in kurse if k.note is not None)
 
     @staticmethod
     def berechne_durchschnitt(kurse):
-        # 0 wird ignoriert, da es ein angerechnetes Fach ist
-        summe_gewichtete_noten = sum(
-            kurs.note * kurs.ects for kurs in kurse if kurs.note is not None and kurs.note != 0
-        )
-        summe_ects = sum(
-            kurs.ects for kurs in kurse if kurs.note is not None and kurs.note != 0
-        )
-        return round(summe_gewichtete_noten / summe_ects, 2) if summe_ects > 0 else None
-    
+        valid = [k for k in kurse if k.note is not None and k.note != 0.0]
+        if not valid:
+            return None
+        s = sum(k.note * k.ects for k in valid)
+        e = sum(k.ects for k in valid)
+        return round(s / e, 2)
+
     @staticmethod
-    def setze_note(kurse, kurscode, neue_note):
-        for kurs in kurse:
-            if kurs.kurscode == kurscode:
-                if neue_note == "A":
-                    kurs.note = 0  # A wird intern als 0 gespeichert
+    def setze_note(kurse, kurscode, raw_input):
+        for k in kurse:
+            if k.kurscode == kurscode:
+                txt = raw_input.strip().upper()
+                if not txt or txt == "-":
+                    k.note = None
+                    return True
+                if txt == "A":
+                    k.note = 0.0
                     return True
                 try:
-                    neue_note = float(neue_note)
-                    if 1 <= neue_note <= 5:
-                        kurs.note = neue_note
+                    val = float(txt)
+                    if 1 <= val <= 5:
+                        k.note = round(val, 2)
                         return True
-                    else:
-                        return False
+                    return False
                 except ValueError:
                     return False
         return False
