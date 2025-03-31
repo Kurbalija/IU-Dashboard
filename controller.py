@@ -43,3 +43,7 @@ class Controller:
         self.ects = Service.berechne_ects(self.kurse)
         self.durchschnitt = Service.berechne_durchschnitt(self.kurse)
         self.view.update_student_info(self.student, self.ects, self.durchschnitt)
+
+if __name__ == "__main__":
+    c = Controller()
+    c.start()
