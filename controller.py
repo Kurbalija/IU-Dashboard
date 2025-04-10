@@ -1,6 +1,5 @@
 from model import StudentRepository, KursRepository
 from service import Service
-from view import View
 
 class Controller:
     def __init__(self):
@@ -8,6 +7,7 @@ class Controller:
         self.kurse = KursRepository.lade_kurse("CSV/kurse.csv")
         self.ects = Service.berechne_ects(self.kurse)
         self.durchschnitt = Service.berechne_durchschnitt(self.kurse)
+        from view import View
         self.view = View(self, self.student, self.kurse, self.ects, self.durchschnitt)
 
     def start(self):
@@ -21,16 +21,34 @@ class Controller:
         return ok
 
     def aktualisiere_kursname(self, kurscode, neuer_name):
-        done = False
         for k in self.kurse:
             if k.kurscode == kurscode:
                 k.name = neuer_name
-                done = True
-                break
-        if done:
-            KursRepository.speichere_kurse("CSV/kurse.csv", self.kurse)
-            self.view.update_student_info(self.student, self.ects, self.durchschnitt)
-        return done
+                KursRepository.speichere_kurse("CSV/kurse.csv", self.kurse)
+                self._update_stats()
+                return True
+        return False
+
+    def aktualisiere_kurscode(self, alter_kurscode, neuer_kurscode):
+        for k in self.kurse:
+            if k.kurscode == alter_kurscode:
+                k.kurscode = neuer_kurscode
+                KursRepository.speichere_kurse("CSV/kurse.csv", self.kurse)
+                self._update_stats()
+                return True
+        return False
+
+    def aktualisiere_kurs_ects(self, kurscode, neuer_ects):
+        for k in self.kurse:
+            if k.kurscode == kurscode:
+                try:
+                    k.ects = int(neuer_ects)
+                except ValueError:
+                    return False
+                KursRepository.speichere_kurse("CSV/kurse.csv", self.kurse)
+                self._update_stats()
+                return True
+        return False
 
     def aktualisiere_student(self, name, studiengang, ziel_ects):
         self.student.name = name
